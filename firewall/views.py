@@ -1,26 +1,27 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
-from django.template import Context
 
 @login_required(login_url = '/')
 def welcome(req):
-	return render(req, 'firewall/welcome.html')
+	return render(req, 'firewall/welcome.html', dictionary = {'name': req.user.username})
 
 def index(req):
 	if req.method == 'POST':
 		name = req.POST.get('name', False)
 		password = req.POST.get('password', False)
 		user = authenticate(username = name, password = password)
-		print 'nameu des!', req.POST
+		print name, password	
 		if user is not None:
 			login(req, user)
-			return render(req, 'firewall/welcome.html', dictionary = {'name': name})
+			return redirect('welcome')
 		else:
-			raise PermissionDenied()
+			return redirect('fault')
 	else:
 		c = {}
 		c.update(csrf(req))
-		return render_to_response('firewall/index.html', c)
+		return render(req, 'firewall/index.html', c)
+
+def fault(req):
+	return render(req, 'firewall/fault.html')
