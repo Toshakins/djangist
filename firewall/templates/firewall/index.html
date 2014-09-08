@@ -1,0 +1,12 @@
+{% extends 'firewall/main.html' %}
+
+{% block body %}
+	<form action="/" method="POST">
+		{% csrf_token %}
+		User: <input name="name" type="text">
+		<br>
+		Password: <input name="password" type="text">
+		<br>
+		<button>Submit</button>
+	</form>
+{% endblock %}
