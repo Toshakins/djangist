@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.template import Context
 
 @login_required(login_url = '/')
 def welcome(req):
@@ -16,7 +17,7 @@ def index(req):
 		print 'nameu des!', req.POST
 		if user is not None:
 			login(req, user)
-			return render(req, 'firewall/welcome.html')
+			return render(req, 'firewall/welcome.html', dictionary = {'name': name})
 		else:
 			raise PermissionDenied()
 	else:
