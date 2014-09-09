@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.core.context_processors import csrf
 from django.views.generic.base import TemplateView
 from django.views.generic import View
+from django import forms
 
 class Welcome(View):
 	def get(self, req):
@@ -23,7 +24,12 @@ class Index(View):
 	def get(self, req):
 		c = {}
 		c.update(csrf(req))
-		return render(req, 'firewall/index.html', c)
+		form = LoginForm()
+		return render(req, 'firewall/index.html', {'c' : c, 'form': form})
 
 class Fault(TemplateView):
 	template_name = 'firewall/fault.html'
+
+class LoginForm(forms.Form):
+	name = forms.CharField()
+	password = forms.CharField(widget=forms.PasswordInput)
