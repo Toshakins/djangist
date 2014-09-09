@@ -1,8 +1,9 @@
 from django.conf.urls import patterns, url
 from firewall import views
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = patterns('',
-    url(r'^welcome$', views.welcome, name='welcome'),
-    url(r'^fault$', views.fault, name='fault'),
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.Index.as_view(), name='index'),
+    url(r'^fault$', views.Fault.as_view(), name='fault'),
+    url(r'^welcome$', login_required(views.Welcome.as_view(), login_url = '/'), name='welcome'),
 )

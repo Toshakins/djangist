@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.core.context_processors import csrf
-from django.contrib.auth.decorators import login_required
+from django.views.generic.base import TemplateView
+from django.views.generic import View
 
-@login_required(login_url = '/')
-def welcome(req):
-	return render(req, 'firewall/welcome.html', dictionary = {'name': req.user.username})
-
-def index(req):
-	if req.method == 'POST':
+class Welcome(View):
+	def get(self, req):
+		return render(req, 'firewall/welcome.html', dictionary = {'name': req.user.username})
+		
+class Index(View):
+	def post(self, req):
 		name = req.POST.get('name', False)
 		password = req.POST.get('password', False)
 		user = authenticate(username = name, password = password)
@@ -18,10 +19,11 @@ def index(req):
 			return redirect('welcome')
 		else:
 			return redirect('fault')
-	else:
+
+	def get(self, req):
 		c = {}
 		c.update(csrf(req))
 		return render(req, 'firewall/index.html', c)
 
-def fault(req):
-	return render(req, 'firewall/fault.html')
+class Fault(TemplateView):
+	template_name = 'firewall/fault.html'
