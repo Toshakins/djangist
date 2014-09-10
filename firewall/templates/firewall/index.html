@@ -6,4 +6,7 @@
 		{{ form }}
 		<button>Submit</button>
 	</form>
+
+	{% url 'celery' as celery_url %}
+	<a href="{{ celery_url }}">Push random number to Celery</a>
 {% endblock %}

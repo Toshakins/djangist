@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'celery',
     'firewall',
 )
 
@@ -60,9 +61,13 @@ WSGI_APPLICATION = 'dj_start.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'sql.db'),
+        'NAME': os.path.join(BASE_DIR,'db.sqlite3'),
     }
 }
+
+BROKER_URL = 'redis://'
+CELERY_ROUTES = {'firewall.views.square_random': {'queue': 'task'}}
+CELERY_IMPORTS = ('firewall.views')
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
