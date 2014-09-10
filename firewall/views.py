@@ -6,6 +6,7 @@ from django.views.generic import View
 from django import forms
 import random
 from tasks import square_random
+from celery import app
 
 
 class Welcome(View):
@@ -40,6 +41,16 @@ class CeleryView(View):
         task = square_random.delay(int(random.random() * 100))
         self.task_list.append(task)
         return render(req, 'firewall/celery.html', dictionary = {'total_tasks': len(self.task_list)})
+
+class QueueInspector(View):
+
+    def get(self, req):
+        # print app.app_or_default().events.State.tasks_by_worker()
+        # print [method for method in dir(app.app_or_default().events.State) if callable(getattr(app.app_or_default().events.State, method))]
+        stats = app.app_or_default().control.inspect().registered()
+        print stats
+        return render(req, 'firewall/inspector.html', dictionary = {'stats': stats})
+
 
 class LoginForm(forms.Form):
     name = forms.CharField()

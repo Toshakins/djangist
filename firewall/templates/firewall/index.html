@@ -1,12 +1,17 @@
 {% extends 'firewall/main.html' %}
 
 {% block body %}
-	<form action="/" method="POST">
-		{% csrf_token %}
-		{{ form }}
-		<button>Submit</button>
-	</form>
+    <form action="/" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button>Submit</button>
+    </form>
 
-	{% url 'celery' as celery_url %}
-	<a href="{{ celery_url }}">Push random number to Celery</a>
+	<br>
+    {% url 'celery' as celery_url %}
+    <a href="{{ celery_url }}">Push random number to Celery</a>
+	<br>
+	<br>
+    {% url 'inspector' as inspector_url %}
+    <b><a href="{{ inspector_url }}">Inpect celery tasks</a></b>
 {% endblock %}
