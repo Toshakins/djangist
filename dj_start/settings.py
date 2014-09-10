@@ -66,8 +66,6 @@ DATABASES = {
 }
 
 BROKER_URL = 'redis://'
-CELERY_ROUTES = {'firewall.views.square_random': {'queue': 'task'}}
-CELERY_IMPORTS = ('firewall.views')
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
