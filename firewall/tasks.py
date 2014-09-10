@@ -3,4 +3,4 @@ from celery import shared_task
 
 @shared_task
 def square_random(x):
-	return x
+    return x
