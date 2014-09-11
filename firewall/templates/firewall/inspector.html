@@ -1,0 +1,11 @@
+{% extends "firewall/main.html" %}
+
+{% block body %}
+	<p>
+		<ul>
+			{% for i in stats %}
+				<li>{{i.task_id}}: {{i.ready}}</li>
+			{% endfor %}
+		</ul>
+	</p>
+{% endblock body %}

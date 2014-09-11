@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic import View
 from django import forms
 import random
-from tasks import square_random
+from tasks import square_random, rand_sleep
 from celery import app
 
 
@@ -38,21 +38,20 @@ class CeleryView(View):
     task_list = []
 
     def get(self, req):
-        task = square_random.delay(int(random.random() * 100))
+        task = rand_sleep.delay()
         self.task_list.append(task)
         return render(req, 'firewall/celery.html', dictionary = {'total_tasks': len(self.task_list)})
 
 class QueueInspector(View):
 
     def get(self, req):
-        # print app.app_or_default().events.State.tasks_by_worker()
-        # print [method for method in dir(app.app_or_default().events.State) if callable(getattr(app.app_or_default().events.State, method))]
-        stats = app.app_or_default().control.inspect().registered()
-        print stats
+        # print app.app_or_default().events.state.tasks_by_worker()
+        stats = CeleryView.task_list
+        stats = [{'task_id': t.task_id} for t in stats]
+        # just send all tasks which were ever been runned
         return render(req, 'firewall/inspector.html', dictionary = {'stats': stats})
 
 
 class LoginForm(forms.Form):
     name = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
-
