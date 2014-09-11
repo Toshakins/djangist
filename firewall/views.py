@@ -4,9 +4,10 @@ from django.core.context_processors import csrf
 from django.views.generic.base import TemplateView
 from django.views.generic import View
 from django import forms
-import random
-from tasks import square_random, rand_sleep
+from random import random
+from tasks import save_random, rand_sleep
 from celery import app
+from firewall.models import Numbers
 
 
 class Welcome(View):
@@ -38,7 +39,7 @@ class CeleryView(View):
     task_list = []
 
     def get(self, req):
-        task = rand_sleep.delay()
+        task = save_random.delay(int(random() * 100))
         self.task_list.append(task)
         return render(req, 'firewall/celery.html', dictionary = {'total_tasks': len(self.task_list)})
 
@@ -46,10 +47,9 @@ class QueueInspector(View):
 
     def get(self, req):
         # print app.app_or_default().events.state.tasks_by_worker()
-        stats = CeleryView.task_list
-        stats = [{'task_id': t.task_id} for t in stats]
+        numbers = Numbers.objects.all()
         # just send all tasks which were ever been runned
-        return render(req, 'firewall/inspector.html', dictionary = {'stats': stats})
+        return render(req, 'firewall/inspector.html', dictionary = {'numbers': numbers})
 
 
 class LoginForm(forms.Form):

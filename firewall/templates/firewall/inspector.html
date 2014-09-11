@@ -2,9 +2,10 @@
 
 {% block body %}
 	<p>
+		<h1>List of numbers from db</h1>
 		<ul>
-			{% for i in stats %}
-				<li>{{i.task_id}}: {{i.ready}}</li>
+			{% for i in numbers %}
+				<li>{{i.number}}</li>
 			{% endfor %}
 		</ul>
 	</p>

@@ -2,10 +2,12 @@ from __future__ import absolute_import
 from celery import shared_task
 from time import sleep
 from random import random
+from firewall.models import Numbers
 
 @shared_task
-def square_random(x):
-    return x
+def save_random(x):
+    numbers = Numbers(number = x)
+    numbers.save()
 
 
 @shared_task
